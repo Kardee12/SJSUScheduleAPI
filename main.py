@@ -66,4 +66,3 @@ async def searchCourses(
         filtered_courses.append(courseEntry)
 
     return JSONResponse(content = filtered_courses)
-
