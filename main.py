@@ -1,9 +1,19 @@
 from typing import List
 from fastapi import FastAPI, Query
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import scraper
 
 app = FastAPI()
+
+#Solves CORS Error
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins (not recommended in production)
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all methods
+    allow_headers=["*"],  # Allow all headers
+)
 
 data_scraper = scraper.ScrapeData()
 json_data = data_scraper.to_json(data_scraper.scrapeData())
@@ -44,11 +54,11 @@ async def getCoursesByProfessor(professor: str):
 
 @app.get("/courses/search")
 async def searchCourses(
-        department: str = Query(None),
-        professor: str = Query(None),
-        course: str = Query(None),
-        units: float = Query(None),
-        mode_of_instruction: str = Query(None)
+         department: str = None,
+        professor: str = None,
+        course: str = None,
+        units: str = None,
+        mode_of_instruction: str = None
 ):
     filtered_courses = []
 
@@ -57,9 +67,9 @@ async def searchCourses(
             continue
         if professor and professor.lower() not in courseEntry["instructor"].lower():
             continue
-        if course and course.lower() not in courseEntry["course"].lower():
+        if course and (not courseEntry["course"] or course.lower() not in courseEntry["course"].lower()):
             continue
-        if units and courseEntry["units"] != units:
+        if units and float(courseEntry["units"]) != float(units):
             continue
         if mode_of_instruction and mode_of_instruction.lower() not in courseEntry["mode_of_instruction"].lower():
             continue

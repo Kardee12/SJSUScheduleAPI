@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Search Courses</h2>
+
+<form id="searchForm">
+  <label for="department">Department:</label><br>
+  <input type="text" id="department" name="department"><br>
+  <label for="professor">Professor:</label><br>
+  <input type="text" id="professor" name="professor"><br>
+  <label for="course">Course:</label><br>
+  <input type="text" id="course" name="course"><br>
+  <label for="units">Units:</label><br>
+  <input type="number" id="units" name="units" step="0.1"><br>
+  <label for="mode_of_instruction">Mode of Instruction:</label><br>
+  <input type="text" id="mode_of_instruction" name="mode_of_instruction"><br>
+  <input type="submit" value="Search">
+</form>
+
+<div id="results"></div>
+
+
+<script>
+document.getElementById('searchForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+  var url = new URL('http://localhost:8000/courses/search');
+  url.search = new URLSearchParams(new FormData(this)).toString();
+  fetch(url)
+    .then(response => response.json())
+
+    .then(data => {
+      var resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '';  // Clear any existing results
+      for (var i = 0; i < data.length && i < 5; i++) {  // Only show first 5 results
+        var course = data[i];
+        var courseDiv = document.createElement('div');
+        courseDiv.innerHTML = '<h3>' + course['course'] + '</h3>'
+          + '<p>Department: ' + course['department'] + '</p>'
+          + '<p>Professor: ' + course['instructor'] + '</p>'
+          + '<p>Units: ' + course['units'] + '</p>'
+          + '<p>Mode of Instruction: ' + course['mode_of_instruction'] + '</p>';
+        resultsDiv.appendChild(courseDiv);
+      }
+    });
+});
+</script>
+
+
+</body>
+</html>
