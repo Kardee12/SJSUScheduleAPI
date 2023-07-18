@@ -18,7 +18,15 @@
   <input type="submit" value="Search">
 </form>
 
-<div id="results"></div>
+<div id="results">
+    {% for course in courses %}
+        <p>{{ course.course_title }}</p>
+        <p>{{ course.department }}</p>
+        <p>{{ course.instructor }}</p>
+        <p>{{ course.units }}</p>
+        <!-- Add more fields as needed -->
+    {% endfor %}
+</div>
 
 
 <script>
@@ -40,6 +48,7 @@ document.getElementById('searchForm').addEventListener('submit', function(event)
           + '<p>Professor: ' + course['instructor'] + '</p>'
           + '<p>Units: ' + course['units'] + '</p>'
           + '<p>Mode of Instruction: ' + course['mode_of_instruction'] + '</p>';
+
         resultsDiv.appendChild(courseDiv);
       }
     });
