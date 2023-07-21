@@ -2,10 +2,20 @@ from django.http import JsonResponse
 from django.shortcuts import render
 
 import scraper
+from django.shortcuts import redirect
+
 
 data_scraper = scraper.ScrapeData()
 json_data = data_scraper.to_json(data_scraper.scrapeData())
+
+
+def home(request):
+    return redirect('search_courses')
+
 def search_courses(request):
+    data_scraper = scraper.ScrapeData()
+    json_data = data_scraper.to_json(data_scraper.scrapeData())
+
     filtered_courses = []
     department = request.GET.get('department', None)
     professor = request.GET.get('professor', None)
@@ -25,8 +35,9 @@ def search_courses(request):
         if mode_of_instruction and mode_of_instruction.lower() not in courseEntry["mode_of_instruction"].lower():
             continue
         filtered_courses.append(courseEntry)
-    context = {'courses': filtered_courses}
-    return render(request, 'search.html', context)
 
-    return JsonResponse(filtered_courses, safe=False)
-
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse(filtered_courses, safe=False)  # Return JSON for AJAX calls
+    else:
+        context = {'courses': filtered_courses}
+        return render(request, 'search.html', context)  # Render the template for direct page visits

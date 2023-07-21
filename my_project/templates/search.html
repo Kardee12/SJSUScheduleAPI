@@ -20,7 +20,7 @@
 
 <div id="results">
     {% for course in courses %}
-        <p>{{ course.course_title }}</p>
+        <h3>{{ course.course_title }}</h3>
         <p>{{ course.department }}</p>
         <p>{{ course.instructor }}</p>
         <p>{{ course.units }}</p>
@@ -29,7 +29,13 @@
 </div>
 
 
+
 <script>
+fetch(url, {
+  headers: {
+    'X-Requested-With': 'XMLHttpRequest'
+  }
+})
 document.getElementById('searchForm').addEventListener('submit', function(event) {
   event.preventDefault();
   var url = new URL('http://localhost:8000/courses/search');
@@ -38,20 +44,21 @@ document.getElementById('searchForm').addEventListener('submit', function(event)
     .then(response => response.json())
 
     .then(data => {
-      var resultsDiv = document.getElementById('results');
-      resultsDiv.innerHTML = '';  // Clear any existing results
-      for (var i = 0; i < data.length && i < 5; i++) {  // Only show first 5 results
-        var course = data[i];
-        var courseDiv = document.createElement('div');
-        courseDiv.innerHTML = '<h3>' + course['course'] + '</h3>'
-          + '<p>Department: ' + course['department'] + '</p>'
-          + '<p>Professor: ' + course['instructor'] + '</p>'
-          + '<p>Units: ' + course['units'] + '</p>'
-          + '<p>Mode of Instruction: ' + course['mode_of_instruction'] + '</p>';
+  var resultsDiv = document.getElementById('results');
+  resultsDiv.innerHTML = '';  // Clear any existing results
+  for (var i = 0; i < data.length && i < 5; i++) {  // Only show first 5 results
+    var course = data[i];
+    var courseDiv = document.createElement('div');
+    courseDiv.innerHTML = '<h3>' + course.course + '</h3>'
+      + '<p>Department: ' + course.department + '</p>'
+      + '<p>Professor: ' + course.instructor + '</p>'
+      + '<p>Units: ' + course.units + '</p>'
+      + '<p>Mode of Instruction: ' + course.mode_of_instruction + '</p>';
 
-        resultsDiv.appendChild(courseDiv);
-      }
-    });
+    resultsDiv.appendChild(courseDiv);
+  }
+});
+
 });
 </script>
 
