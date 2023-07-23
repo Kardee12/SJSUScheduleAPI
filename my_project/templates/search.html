@@ -1,8 +1,16 @@
+ {% load static %}
+    <link rel="stylesheet"  href="{% static 'styles.css' %}" >
+
 <!DOCTYPE html>
 <html>
+
+
+
 <body>
 
 <h2>Search Courses</h2>
+
+
 
 <form id="searchForm">
   <label for="department">Department:</label><br>
@@ -18,13 +26,20 @@
   <input type="submit" value="Search">
 </form>
 
-<div id="results">
+<div id="results" >
+    {%if no_courses_found %}
+    <h3>No courses matched criteria</h3>
+    {% endif %}
+
     {% for course in courses %}
-        <h3>{{ course.course_title }}</h3>
+    <div class="courseText">
+        <h2>{{ course.course_title }}</h2>
         <p>{{ course.department }}</p>
         <p>{{ course.instructor }}</p>
         <p>{{ course.units }}</p>
-        <!-- Add more fields as needed -->
+<!--        Add more fields as needed-->
+    </div>
+
     {% endfor %}
 </div>
 
@@ -63,5 +78,7 @@ document.getElementById('searchForm').addEventListener('submit', function(event)
 </script>
 
 
+
 </body>
+
 </html>

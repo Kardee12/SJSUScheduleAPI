@@ -36,8 +36,13 @@ def search_courses(request):
             continue
         filtered_courses.append(courseEntry)
 
+
+
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         return JsonResponse(filtered_courses, safe=False)  # Return JSON for AJAX calls
     else:
-        context = {'courses': filtered_courses}
+        context = {
+            'courses': filtered_courses,
+            'no_courses_found': len(filtered_courses) == 0,
+        }
         return render(request, 'search.html', context)  # Render the template for direct page visits
